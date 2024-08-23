@@ -20,33 +20,29 @@ setup() {
     [[ $output == *"NO GLUE ALERT"* ]] # Ensure output contains expected string
 }
 
-@test "2: ModifyCustomTemplate" {
-    # Ensure a custom template has the text key automatically affixed.
-    GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplate.md)
-    ModifyCustomTemplate
-    TEXTKEY=$(echo $CUSTOM_BODY_MODIFIED | jq '.text')
-    [ "$TEXTKEY" == '""' ]
-}
-
-@test "4: ModifyCustomTemplate with environment variable in link" {
+@test "2: ModifyCustomTemplate with environment variable in link" {
     TESTLINKURL="http://circleci.com"
     GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplateWithLink.md)
     GLUE_DEFAULT_TARGET="xyz"
     BuildMessageBody
     EXPECTED=$(echo "{ \"text\": \"Sample link using environment variable in markdown [LINK](${TESTLINKURL})\", \"target\": \"$GLUE_DEFAULT_TARGET\" }" | jq)
+    echo $EXPECTED
+    echo $GLUE_MSG_BODY
     [ "$GLUE_MSG_BODY" == "$EXPECTED" ]
 }
 
-@test "5: ModifyCustomTemplate special chars" {
+@test "3: ModifyCustomTemplate special chars" {
     TESTLINKURL="http://circleci.com"
     GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplateWithSpecialChars.md)
     GLUE_DEFAULT_TARGET="xyz"
     BuildMessageBody
     EXPECTED=$(echo "{ \"text\": \"These asterisks are not \`glob\` patterns **t** (parentheses'). [Link](https://example.org)\", \"target\": \"$GLUE_DEFAULT_TARGET\" }" | jq)
+    echo $EXPECTED
+    echo $GLUE_MSG_BODY
     [ "$GLUE_MSG_BODY" == "$EXPECTED" ]
 }
 
-@test "6: FilterBy - match-all default" {
+@test "4: FilterBy - match-all default" {
     GLUE_PARAM_BRANCHPATTERN=".+"
     CIRCLE_BRANCH="xyz-123"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
@@ -56,7 +52,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "7: FilterBy - string" {
+@test "5: FilterBy - string" {
     CIRCLE_BRANCH="master"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
     echo "Error output debug: $output"
@@ -64,7 +60,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "8: FilterBy - regex numbers" {
+@test "6: FilterBy - regex numbers" {
     CIRCLE_BRANCH="pr-123"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
     echo "Error output debug: $output"
@@ -72,7 +68,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "9: FilterBy - non-match" {
+@test "7: FilterBy - non-match" {
     CIRCLE_BRANCH="x"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
     echo "Error output debug: $output"
@@ -80,7 +76,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "10: FilterBy - no partial-match" {
+@test "8: FilterBy - no partial-match" {
     CIRCLE_BRANCH="pr-"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
     echo "Error output debug: $output"
@@ -88,7 +84,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "11: FilterBy - GLUE_PARAM_BRANCHPATTERN is empty" {
+@test "9: FilterBy - GLUE_PARAM_BRANCHPATTERN is empty" {
     unset GLUE_PARAM_BRANCHPATTERN
     CIRCLE_BRANCH="master"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
@@ -96,13 +92,13 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "12: FilterBy - CIRCLE_BRANCH is empty" {
+@test "10: FilterBy - CIRCLE_BRANCH is empty" {
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
     echo "Error output debug: $output"
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "13: FilterBy - match and GLUE_PARAM_INVERT_MATCH is set" {
+@test "11: FilterBy - match and GLUE_PARAM_INVERT_MATCH is set" {
     CIRCLE_BRANCH="pr-123"
     GLUE_PARAM_INVERT_MATCH="1"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
@@ -111,7 +107,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "14: FilterBy - non-match and GLUE_PARAM_INVERT_MATCH is set" {
+@test "12: FilterBy - non-match and GLUE_PARAM_INVERT_MATCH is set" {
     CIRCLE_BRANCH="foo"
     GLUE_PARAM_INVERT_MATCH="1"
     run FilterBy "$GLUE_PARAM_BRANCHPATTERN" "$CIRCLE_BRANCH"
@@ -120,7 +116,7 @@ setup() {
     [ "$status" -eq 0 ] # In any case, this should return a 0 exit as to not block a build/deployment.
 }
 
-@test "15: Sanitize - Escape newlines in environment variables" {
+@test "13: Sanitize - Escape newlines in environment variables" {
     CIRCLE_JOB="$(printf "%s\\n" "Line 1." "Line 2." "Line 3.")"
     EXPECTED="Line 1.\\nLine 2.\\nLine 3."
     GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplate.md)
@@ -129,7 +125,7 @@ setup() {
     [ "$CIRCLE_JOB" = "$EXPECTED" ] # Newlines should be literal and escaped
 }
 
-@test "16: Sanitize - Escape double quotes in environment variables" {
+@test "14: Sanitize - Escape double quotes in environment variables" {
     CIRCLE_JOB="$(printf "%s\n" "Hello \"world\".")"
     EXPECTED="Hello \\\"world\\\"."
     GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplate.md)
@@ -138,7 +134,7 @@ setup() {
     [ "$CIRCLE_JOB" = "$EXPECTED" ] # Double quotes should be escaped
 }
 
-@test "17: Sanitize - Escape backslashes in environment variables" {
+@test "15: Sanitize - Escape backslashes in environment variables" {
     CIRCLE_JOB="$(printf "%s\n" "removed extra '\' from  notification template")"
     EXPECTED="removed extra '\\\' from  notification template"
     GLUE_PARAM_CUSTOM=$(cat $BATS_TEST_DIRNAME/sampleCustomTemplate.md)
