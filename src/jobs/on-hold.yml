@@ -1,5 +1,5 @@
 description: |
-  Insert this job in-line with your standard CircleCI on-hold notification jobs to simulataniously send a Slack notification containing a link to the paused Workflow.
+  Insert this job in-line with your standard CircleCI on-hold notification jobs to simultaneously send a Glue notification containing a link to the paused Workflow.
 
 parameters:
   branch_pattern:
@@ -17,9 +17,9 @@ parameters:
     default: false
   mentions:
     description: |
-      Exports to the "$SLACK_PARAM_MENTIONS" environment variable for use in templates.
+      Exports to the "$GLUE_PARAM_MENTIONS" environment variable for use in templates.
       Mention users via the @ symbol: "@USER"
-      If the username contains a space, the Slack ID must be used with angled brackets: "<@U8XXXXXXX>"
+      If the username contains a space, the Glue ID must be used with angled brackets: "<@U8XXXXXXX>"
     type: string
     default: ""
   template:
@@ -30,20 +30,20 @@ parameters:
     description: |
       (optional) Enter a custom message template.
 
-      1. Create your message template using the Block Kit Builder: https://app.slack.com/block-kit-builder/.
+      1. Create your message template using Glue Markdown.
       2. Insert any desired environment variables.
       3. Paste value here.
     type: string
     default: ""
-  channel:
+  target:
       description: |
-        Select which channel in which to post to. Channel name or ID will work. You may include a comma separated list of channels if you wish to post to multiple channels at once. Set the "SLACK_DEFAULT_CHANNEL" environment variable for the default channel.
+        Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
       type: string
-      default: $SLACK_DEFAULT_CHANNEL
+      default: $GLUE_DEFAULT_TARGET
   debug:
       description: |
-       View payload and response being sent to slack api.
-       Enable to view full payload being sent to slack and response being received from the API call.
+       View payload and response being sent to Glue API.
+       Enable to view the full payload being sent to Glue and the response being received from the API call.
       type: boolean
       default: false
   circleci_host:
@@ -53,7 +53,7 @@ parameters:
       default: https://circleci.com
   step_name:
     type: string
-    default: Slack - Sending Notification
+    default: Glue - Sending Notification
     description: Specify a custom step name for this command, if desired
 
 docker:
@@ -68,7 +68,7 @@ steps:
       invert_match: <<parameters.invert_match>>
       custom: <<parameters.custom>>
       mentions: <<parameters.mentions>>
-      channel: <<parameters.channel>>
+      target: <<parameters.target>>
       debug: <<parameters.debug>>
       circleci_host: <<parameters.circleci_host>>
       step_name: <<parameters.step_name>>

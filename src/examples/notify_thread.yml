@@ -1,96 +1,45 @@
 description: |
-  Send a Slack notification to a channel and use the same message to post replies in a thread.
-  `thread_id` parameter holds a thread identifier in case there are multiple notifications in the pipeline
+  Create a Glue thread in the `target` group and send subsequent `notify` messages to the same thread.
+  `thread_subject` parameter determines the subject of the thread.
+  `thread_id` parameter holds a thread identifier in case there are multiple notifications in the pipeline.
 usage:
   version: 2.1
   orbs:
-    slack: circleci/slack@4.1
-    node: circleci/node:4.1
+    glue: gluegroups/glue@1.0
+    node: circleci/node@4.1
   jobs:
     test:
       executor:
         name: node/default
       steps:
-        - slack/notify:
+        - glue/notify:
             event: always
-            channel: engineering
+            target: grp_engineering
             thread_id: testing
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*Tests started.*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
-        - slack/notify:
+              **Tests started.**
+        - glue/notify:
             event: always
-            channel: engineering
+            target: grp_engineering
             thread_id: testing
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*Tests finished.*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
+              **Tests finished.**
     deploy:
       executor:
         name: node/default
       steps:
-        - slack/notify:
+        - glue/notify:
             event: always
-            channel: engineering
+            target: grp_engineering
             thread_id: deployment
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*Deployment started.*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
-        - slack/notify:
+              **Deployment started.**
+        - glue/notify:
             event: always
-            channel: engineering
+            target: grp_engineering
             thread_id: deployment
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*Deployment finished.*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
+              **Deployment finished.**
   workflows:
     deploy_and_notify:
       jobs:

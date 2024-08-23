@@ -1,41 +1,27 @@
 description: |
-  Send a Slack notification to two channels simultaneously.
-  By default, if no channel parameter is set, the $SLACK_DEFAULT_CHANNEL value will be used (must be set).
-  A custom channel, or comma-separated list of channels can be supplied via the "channel" parameter.
+  Send a Glue notification to two targets simultaneously.
+  By default, if no target parameter is set, the $GLUE_DEFAULT_TARGET value will be used (must be set).
+  A custom target, or comma-separated list of targets can be supplied via the "target" parameter.
 
-  It is recommended to use the "channel ID" for the value(s).
-  View the wiki: https://github.com/CircleCI-Public/slack-orb/wiki/How-to-set-Slack-channel
+  It is recommended to use the "target ID" for the value(s).
 usage:
   version: 2.1
   orbs:
-    slack: circleci/slack@4.1
-    node: circleci/node:4.1
+    glue: gluegroups/glue@1.0
+    node: circleci/node@4.1
   jobs:
     deploy:
       executor:
         name: node/default
       steps:
-        - slack/notify:
+        - glue/notify:
             event: always
-            channel: ABCXYZ, ZXCVBN
+            target: grp_ABCXYZ, grp_ZXCVBN
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*This is a text notification*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
+              **This is a text notification**
   workflows:
     deploy_and_notify:
       jobs:
         - deploy:
-            # Secure your Slack OAuth access token behind a restricted context
-            context: slack-secrets
+            # Secure your Glue OAuth access token behind a restricted context
+            context: glue-secrets

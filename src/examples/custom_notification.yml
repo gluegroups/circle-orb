@@ -1,36 +1,22 @@
 description: |
-  Send a custom notification using Slack's Block Kit Builder.
+  Send a custom notification using Glue's Markdown.
   Create the payload code and paste it in your notify command's custom parameter.
-  Detailed instructions in the GitHub readme.
-  https://app.slack.com/block-kit-builder
+  Detailed instructions can be found in the GitHub readme.
 usage:
   version: 2.1
   orbs:
-    slack: circleci/slack@4.1
+    glue: gluegroups/glue@1.0
   jobs:
     notify:
       docker:
         - image: cimg/base:stable
       steps:
-        - slack/notify:
+        - glue/notify:
             event: always
             custom: |
-              {
-                "blocks": [
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "plain_text",
-                        "text": "*This is a text notification*",
-                        "emoji": true
-                      }
-                    ]
-                  }
-                ]
-              }
+              **This is a text notification**
   workflows:
     send-notification:
       jobs:
         - notify:
-            context: slack-secrets
+            context: glue-secrets

@@ -1,14 +1,14 @@
 description: |
-  Notify a Slack channel with a custom message.
-  The environment variables SLACK_ACCESS_TOKEN and SLACK_DEFAULT_CHANNEL must be set for this orb to work.
-  For instructions on how to set them, follow the setup guide available in the wiki: https://github.com/CircleCI-Public/slack-orb/wiki/Setup.
+  Notify a Glue target with a custom message.
+  The environment variables GLUE_ACCESS_TOKEN and GLUE_DEFAULT_TARGET must be set for this orb to work.
+  For instructions on how to set them, follow the setup guide available in the wiki: https://github.com/gluegroups/circle-orb/wiki/Setup.
 
 parameters:
   template:
     description: |
       Select which template to use for the notification by its name. The name must be available as an environment variable.
-      The built-in templates can be found and previewed at: https://github.com/CircleCI-Public/slack-orb/wiki#templates.
-      Alternatively, you can create and use your own dynamic templates: https://github.com/CircleCI-Public/slack-orb/wiki/Dynamic-Templates.
+      The built-in templates can be found and previewed at: https://github.com/gluegroups/circle-orb/wiki#templates.
+      Alternatively, you can create and use your own dynamic templates: https://github.com/gluegroups/circle-orb/wiki/Dynamic-Templates.
       If left empty and no custom template is provided, the template will be automatically selected based on the job status.
     type: string
     default: ""
@@ -16,7 +16,7 @@ parameters:
     description: |
       Enter a custom message template.
 
-      1. Create your message template using the Block Kit Builder: https://app.slack.com/block-kit-builder/.
+      1. Create your message template using the Glue markdown.
       2. Insert any desired environment variables.
       3. Paste value here.
     type: string
@@ -45,25 +45,25 @@ parameters:
     default: false
   mentions:
     description: |
-      Exports to the "$SLACK_PARAM_MENTIONS" environment variable for use in templates.
+      Exports to the "$GLUE_PARAM_MENTIONS" environment variable for use in templates.
       Mention users via the @ symbol: "@USER"
-      If the username contains a space, the Slack ID must be used with angled brackets: "<@U8XXXXXXX>"
+      If the username contains a space, the Glue ID must be used with angled brackets: "<@U8XXXXXXX>"
     type: string
     default: ""
-  channel:
+  target:
     description: |
-      Select which channel in which to post to. Channel name or ID will work. You may include a comma separated list of channels if you wish to post to multiple channels at once. Set the "SLACK_DEFAULT_CHANNEL" environment variable for the default channel.
+      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
     type: string
-    default: $SLACK_DEFAULT_CHANNEL
+    default: $GLUE_DEFAULT_TARGET
   ignore_errors:
       description: |
-        Ignore errors posting to Slack.
-        Disable to catch initial setup errors. Re-enable to prevent Slack errors from affecting your pipeline.
+        Ignore errors posting to Glue.
+        Disable to catch initial setup errors. Re-enable to prevent Glue errors from affecting your pipeline.
       type: boolean
       default: true
   debug:
       description: |
-       Enable to view full payload being sent to Slack and response being received from the API call.
+       Enable to view full payload being sent to Glue and response being received from the API call.
        Redacted content can be viewed by re-running the job with SSH and accessing the log files referenced in the job output.
        When run in a persistent build environment such as CircleCI Runner, these debug log files may remain in the system's temporary filesystem indefinitely and accumulate over time.
       type: boolean
@@ -75,27 +75,33 @@ parameters:
       default: https://circleci.com
   step_name:
     type: string
-    default: Slack - Sending Notification
+    default: Glue - Sending Notification
     description: Specify a custom step name for this command, if desired
-  thread_id:
+  thread_by:
     type: string
     default: ""
     description: |
-      When set, the first `notify` with a given `thread_id` will appear as a regular slack message.
-      Any subsequent `notify` usage with the same identifier will be posted within the initial message's thread.
+      When set, the first `notify` with a given `thread_id` will create new Glue thread.
+      Any subsequent `notify` usage with the same identifier will be posted within that same thread.
       `thread_id` should be set to any arbitrary string to help you identify different threads. See examples for more information.
-      Enabling thread messages with this parameter implies using a very small amount of cacheing: ~200 B
+      To use this feature, a group ID must be used as the `target` and `threadSubject` must be specified.
+  thread_subject:
+    type: string
+    default: ""
+    description: |
+      When specified, a new Glue thread will be created with this thread subject.
+      To use this feature, a group ID must be used as the `target`.
 steps:
   - run:
       when: on_fail
-      name: Slack - Detecting Job Status (FAIL)
+      name: Glue - Detecting Job Status (FAIL)
       command: |
-        echo 'export CCI_STATUS="fail"' > /tmp/SLACK_JOB_STATUS
+        echo 'export CCI_STATUS="fail"' > /tmp/GLUE_JOB_STATUS
   - run:
       when: on_success
-      name: Slack - Detecting Job Status (PASS)
+      name: Glue - Detecting Job Status (PASS)
       command: |
-        echo 'export CCI_STATUS="pass"' > /tmp/SLACK_JOB_STATUS
+        echo 'export CCI_STATUS="pass"' > /tmp/GLUE_JOB_STATUS
   - when:
       condition:
         not:
@@ -109,33 +115,24 @@ steps:
       when: always
       name: << parameters.step_name >>
       environment:
-        SLACK_PARAM_EVENT: "<<parameters.event>>"
-        SLACK_PARAM_TEMPLATE: "<<parameters.template>>"
-        SLACK_PARAM_CUSTOM: "<<parameters.custom>>"
-        SLACK_PARAM_MENTIONS: "<<parameters.mentions>>"
-        SLACK_PARAM_BRANCHPATTERN: "<<parameters.branch_pattern>>"
-        SLACK_PARAM_TAGPATTERN: "<<parameters.tag_pattern>>"
-        SLACK_PARAM_INVERT_MATCH: "<<parameters.invert_match>>"
-        SLACK_PARAM_CHANNEL: "<<parameters.channel>>"
-        SLACK_PARAM_IGNORE_ERRORS: "<<parameters.ignore_errors>>"
-        SLACK_PARAM_DEBUG: "<<parameters.debug>>"
-        SLACK_PARAM_CIRCLECI_HOST: "<<parameters.circleci_host>>"
-        SLACK_PARAM_THREAD: "<<parameters.thread_id>>"
-        SLACK_SCRIPT_NOTIFY: "<<include(scripts/notify.sh)>>"
-        SLACK_SCRIPT_UTILS: "<<include(scripts/utils.sh)>>"
+        GLUE_PARAM_EVENT: "<<parameters.event>>"
+        GLUE_PARAM_TEMPLATE: "<<parameters.template>>"
+        GLUE_PARAM_CUSTOM: "<<parameters.custom>>"
+        GLUE_PARAM_MENTIONS: "<<parameters.mentions>>"
+        GLUE_PARAM_BRANCHPATTERN: "<<parameters.branch_pattern>>"
+        GLUE_PARAM_TAGPATTERN: "<<parameters.tag_pattern>>"
+        GLUE_PARAM_INVERT_MATCH: "<<parameters.invert_match>>"
+        GLUE_PARAM_TARGET: "<<parameters.target>>"
+        GLUE_PARAM_IGNORE_ERRORS: "<<parameters.ignore_errors>>"
+        GLUE_PARAM_DEBUG: "<<parameters.debug>>"
+        GLUE_PARAM_CIRCLECI_HOST: "<<parameters.circleci_host>>"
+        GLUE_PARAM_THREAD_BY: "<<parameters.thread_by>>"
+        GLUE_PARAM_THREAD_SUBJECT: "<<parameters.thread_subject>>"
+        GLUE_SCRIPT_NOTIFY: "<<include(scripts/notify.sh)>>"
+        GLUE_SCRIPT_UTILS: "<<include(scripts/utils.sh)>>"
         # import pre-built templates using the orb-pack local script include.
-        basic_fail_1: "<<include(message_templates/basic_fail_1.json)>>"
-        success_tagged_deploy_1: "<<include(message_templates/success_tagged_deploy_1.json)>>"
-        basic_on_hold_1: "<<include(message_templates/basic_on_hold_1.json)>>"
-        basic_success_1: "<<include(message_templates/basic_success_1.json)>>"
+        basic_fail_1: "<<include(message_templates/basic_fail_1.md)>>"
+        success_tagged_deploy_1: "<<include(message_templates/success_tagged_deploy_1.md)>>"
+        basic_on_hold_1: "<<include(message_templates/basic_on_hold_1.md)>>"
+        basic_success_1: "<<include(message_templates/basic_success_1.md)>>"
       command: <<include(scripts/main.sh)>>
-  - when:
-      condition:
-        not:
-          equal: [ "", <<parameters.thread_id>> ]
-      steps:
-        - save_cache:
-            key: cache-<< parameters.thread_id >>-{{ .Environment.CIRCLE_PIPELINE_ID }}
-            paths:
-              - /tmp/SLACK_THREAD_INFO
-            when: always

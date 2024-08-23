@@ -1,0 +1,1 @@
+These asterisks are not `glob` patterns **t** (parentheses'). [Link](https://example.org)

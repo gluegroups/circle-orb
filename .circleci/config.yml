@@ -26,7 +26,7 @@ workflows:
           path: ./src/tests
           filters: *filters
       - orb-tools/continue:
-          orb_name: slack
+          orb_name: glue
           pipeline_number: << pipeline.number >>
           vcs_type: << pipeline.project.type >>
           requires: [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check, bats/run]

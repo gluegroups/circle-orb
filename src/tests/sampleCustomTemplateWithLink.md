@@ -1,0 +1,1 @@
+Sample link using environment variable in markdown [LINK](${TESTLINKURL})
