@@ -131,7 +131,7 @@ workflows:
   test-deploy:
     jobs:
       - integration-test-templates:
-          context: circle-orb
+          context: circle-orb-test
           filters: *filters
           matrix:
             parameters:
