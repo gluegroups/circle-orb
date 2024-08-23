@@ -1,4 +1,4 @@
-## CircleCI Job Succeeded! ✅
+## CircleCI Job Succeeded! ✅  
 
 **Job:** ${CIRCLE_JOB}
 **Project:** $CIRCLE_PROJECT_REPONAME

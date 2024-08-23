@@ -145,7 +145,7 @@ workflows:
           enable_pr_comment: true
           github_token: GHI_TOKEN
           requires: [orb-tools/pack, integration-test-templates]
-          context: circle-orb
+          context: orb-publishing
           filters: *release-filters
 executors:
   cimg:

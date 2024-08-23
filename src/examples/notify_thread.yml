@@ -1,7 +1,7 @@
 description: |
   Create a Glue thread in the `target` group and send subsequent `notify` messages to the same thread.
   `thread_subject` parameter determines the subject of the thread.
-  `thread_id` parameter holds a thread identifier in case there are multiple notifications in the pipeline.
+  `thread_by` parameter holds a thread identifier in case there are multiple notifications in the pipeline.
 usage:
   version: 2.1
   orbs:
@@ -14,14 +14,16 @@ usage:
       steps:
         - glue/notify:
             event: always
-            target: grp_engineering
-            thread_by: testing
+            target: grp_ABCXYZ
+            thread_by: testing-$CIRCLE_SHA1
+            thread_subject: CI workflow for $CIRCLE_SHA1
             custom: |
               **Tests started.**
         - glue/notify:
             event: always
-            target: grp_engineering
-            thread_by: testing
+            target: grp_ABCXYZ
+            thread_by: testing-$CIRCLE_SHA1
+            thread_subject: CI workflow for $CIRCLE_SHA1
             custom: |
               **Tests finished.**
     deploy:
@@ -30,14 +32,16 @@ usage:
       steps:
         - glue/notify:
             event: always
-            target: grp_engineering
-            thread_by: deployment
+            target: grp_ABCXYZ
+            thread_by: testing-$CIRCLE_SHA1
+            thread_subject: CI workflow for $CIRCLE_SHA1
             custom: |
               **Deployment started.**
         - glue/notify:
             event: always
-            target: grp_engineering
-            thread_by: deployment
+            target: grp_ABCXYZ
+            thread_by: testing-$CIRCLE_SHA1
+            thread_subject: CI workflow for $CIRCLE_SHA1
             custom: |
               **Deployment finished.**
   workflows:

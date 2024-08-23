@@ -1,4 +1,4 @@
-## CircleCI Deployment Successful! 🎉
+## CircleCI Deployment Successful! 🎉  
 
 **Project:** $CIRCLE_PROJECT_REPONAME
 **When:** $(date +'%m/%d/%Y %T')

@@ -1,4 +1,4 @@
-## CircleCI Job On Hold - Awaiting Approval ✋
+## CircleCI Job On Hold - Awaiting Approval ✋  
 
 **Project:** $CIRCLE_PROJECT_REPONAME
 **Branch:** $CIRCLE_BRANCH
