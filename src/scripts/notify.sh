@@ -49,6 +49,9 @@ BuildMessageBody() {
 }
 
 PostToGlue() {
+    echo "PostToGlue"
+    echo "$GLUE_PARAM_TARGET"
+
     # Post once per target listed by the target parameter
     #    The target must be modified in GLUE_MSG_BODY
     # shellcheck disable=SC2001
