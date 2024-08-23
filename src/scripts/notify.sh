@@ -35,8 +35,12 @@ BuildMessageBody() {
         T2="$(eval printf '%s' \""$T1"\")"
     fi
 
+    echo $T2
+
     # Insert the default target. THIS IS TEMPORARY
     T2="$(printf '%s' "$T2" | jq ". + {\"target\": \"$GLUE_DEFAULT_TARGET\"}")"
+
+    echo $T2
 
     if [ -n "${GLUE_PARAM_THREAD_SUBJECT:-}" ]; then
         T2="$(printf '%s' "$T2" | jq ". + {\"threadSubject\": \"$GLUE_PARAM_THREAD_SUBJECT\"}")"
@@ -44,6 +48,8 @@ BuildMessageBody() {
             T2="$(printf '%s' "$T2" | jq ". + {\"threadBy\": \"$GLUE_PARAM_THREAD_BY\"}")"
         fi
     fi
+
+    echo $T2
 
     GLUE_MSG_BODY="$T2"
 }
