@@ -26,8 +26,6 @@ setup() {
     GLUE_DEFAULT_TARGET="xyz"
     BuildMessageBody
     EXPECTED=$(echo "{ \"text\": \"Sample link using environment variable in markdown [LINK](${TESTLINKURL})\", \"target\": \"$GLUE_DEFAULT_TARGET\" }" | jq)
-    echo $EXPECTED
-    echo $GLUE_MSG_BODY
     [ "$GLUE_MSG_BODY" == "$EXPECTED" ]
 }
 
@@ -37,8 +35,6 @@ setup() {
     GLUE_DEFAULT_TARGET="xyz"
     BuildMessageBody
     EXPECTED=$(echo "{ \"text\": \"These asterisks are not \`glob\` patterns **t** (parentheses'). [Link](https://example.org)\", \"target\": \"$GLUE_DEFAULT_TARGET\" }" | jq)
-    echo $EXPECTED
-    echo $GLUE_MSG_BODY
     [ "$GLUE_MSG_BODY" == "$EXPECTED" ]
 }
 
