@@ -151,9 +151,9 @@ executors:
   cimg:
     docker:
       - image: cimg/base:current
-  Mac:
-    macOS:
-      Xcode: 14.0.0
+  mac:
+    macos:
+      xcode: 14.0.0
   alpine:
     # This image contains both CURL and JQ
     docker:
