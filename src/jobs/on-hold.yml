@@ -36,21 +36,23 @@ parameters:
     type: string
     default: ""
   target:
-      description: |
-        Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
-      type: string
-      default: $GLUE_DEFAULT_TARGET
+    description: |
+      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, 
+      but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. 
+      Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
+    type: string
+    default: $GLUE_DEFAULT_TARGET
   debug:
-      description: |
-       View payload and response being sent to Glue API.
-       Enable to view the full payload being sent to Glue and the response being received from the API call.
-      type: boolean
-      default: false
+    description: |
+      View payload and response being sent to Glue API.
+      Enable to view the full payload being sent to Glue and the response being received from the API call.
+    type: boolean
+    default: false
   circleci_host:
-      description: |
-       CircleCI Host (used as the base for the Workflow URL)
-      type: string
-      default: https://circleci.com
+    description: |
+      CircleCI Host (used as the base for the Workflow URL)
+    type: string
+    default: https://circleci.com
   step_name:
     type: string
     default: Glue - Sending Notification

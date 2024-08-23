@@ -15,13 +15,13 @@ usage:
         - glue/notify:
             event: always
             target: grp_engineering
-            thread_id: testing
+            thread_by: testing
             custom: |
               **Tests started.**
         - glue/notify:
             event: always
             target: grp_engineering
-            thread_id: testing
+            thread_by: testing
             custom: |
               **Tests finished.**
     deploy:
@@ -31,13 +31,13 @@ usage:
         - glue/notify:
             event: always
             target: grp_engineering
-            thread_id: deployment
+            thread_by: deployment
             custom: |
               **Deployment started.**
         - glue/notify:
             event: always
             target: grp_engineering
-            thread_id: deployment
+            thread_by: deployment
             custom: |
               **Deployment finished.**
   workflows:

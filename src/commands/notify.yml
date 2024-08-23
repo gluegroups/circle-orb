@@ -29,12 +29,14 @@ parameters:
     default: "always"
   branch_pattern:
     description: |
-      A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
+      A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. 
+      By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
     type: string
     default: ".+"
   tag_pattern:
     description: |
-      A comma separated list of regex matchable tag names. Notifications will only be sent if sent from a job from these branches. By default ".+" will be used to match all tags. Pattern must match the full string, no partial matches.
+      A comma separated list of regex matchable tag names. Notifications will only be sent if sent from a job from these branches. 
+      By default ".+" will be used to match all tags. Pattern must match the full string, no partial matches.
     type: string
     default: ".+"
   invert_match:
@@ -52,27 +54,29 @@ parameters:
     default: ""
   target:
     description: |
-      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
+      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, 
+      but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. 
+      Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
     type: string
     default: $GLUE_DEFAULT_TARGET
   ignore_errors:
-      description: |
-        Ignore errors posting to Glue.
-        Disable to catch initial setup errors. Re-enable to prevent Glue errors from affecting your pipeline.
-      type: boolean
-      default: true
+    description: |
+      Ignore errors posting to Glue.
+      Disable to catch initial setup errors. Re-enable to prevent Glue errors from affecting your pipeline.
+    type: boolean
+    default: true
   debug:
-      description: |
-       Enable to view full payload being sent to Glue and response being received from the API call.
-       Redacted content can be viewed by re-running the job with SSH and accessing the log files referenced in the job output.
-       When run in a persistent build environment such as CircleCI Runner, these debug log files may remain in the system's temporary filesystem indefinitely and accumulate over time.
-      type: boolean
-      default: false
+    description: |
+      Enable to view full payload being sent to Glue and response being received from the API call.
+      Redacted content can be viewed by re-running the job with SSH and accessing the log files referenced in the job output.
+      When run in a persistent build environment such as CircleCI Runner, these debug log files may remain in the system's temporary filesystem indefinitely and accumulate over time.
+    type: boolean
+    default: false
   circleci_host:
-      description: |
-       A CircleCI Host which used in a message template.
-      type: string
-      default: https://circleci.com
+    description: |
+      A CircleCI Host which used in a message template.
+    type: string
+    default: https://circleci.com
   step_name:
     type: string
     default: Glue - Sending Notification
@@ -81,9 +85,9 @@ parameters:
     type: string
     default: ""
     description: |
-      When set, the first `notify` with a given `thread_id` will create new Glue thread.
+      When set, the first `notify` with a given `thread_by` will create new Glue thread.
       Any subsequent `notify` usage with the same identifier will be posted within that same thread.
-      `thread_id` should be set to any arbitrary string to help you identify different threads. See examples for more information.
+      `thread_by` should be set to any arbitrary string to help you identify different threads. See examples for more information.
       To use this feature, a group ID must be used as the `target` and `threadSubject` must be specified.
   thread_subject:
     type: string
@@ -102,15 +106,6 @@ steps:
       name: Glue - Detecting Job Status (PASS)
       command: |
         echo 'export CCI_STATUS="pass"' > /tmp/GLUE_JOB_STATUS
-  - when:
-      condition:
-        not:
-          equal: [ "", <<parameters.thread_id>> ]
-      steps:
-        - restore_cache:
-            keys:
-              - cache-<< parameters.thread_id >>-{{ .Environment.CIRCLE_PIPELINE_ID }}
-            when: always
   - run:
       when: always
       name: << parameters.step_name >>
