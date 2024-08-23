@@ -126,6 +126,22 @@ jobs:
           event: always
           custom: |
             $(cat /tmp/msg)
+      - glue/notify:
+          debug: true
+          step_name: "Notify in a new thread"
+          event: always
+          thread_by: testing-$CIRCLE_SHA1
+          thread_subject: CI workflow for $CIRCLE_SHA1
+          custom: |
+            **Message 1.**
+      - glue/notify:
+          debug: true
+          step_name: "Notify in a new thread"
+          event: always
+          thread_by: testing-$CIRCLE_SHA1
+          thread_subject: CI workflow for $CIRCLE_SHA1
+          custom: |
+            **Message 2.**
 
 workflows:
   test-deploy:
