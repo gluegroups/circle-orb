@@ -29,13 +29,13 @@ parameters:
     default: "always"
   branch_pattern:
     description: |
-      A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. 
+      A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches.
       By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
     type: string
     default: ".+"
   tag_pattern:
     description: |
-      A comma separated list of regex matchable tag names. Notifications will only be sent if sent from a job from these branches. 
+      A comma separated list of regex matchable tag names. Notifications will only be sent if sent from a job from these branches.
       By default ".+" will be used to match all tags. Pattern must match the full string, no partial matches.
     type: string
     default: ".+"
@@ -54,8 +54,8 @@ parameters:
     default: ""
   target:
     description: |
-      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default, 
-      but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once. 
+      Specify a Glue thread ID (thr_ABCXYZ) or group ID (grp_ABCXYZ) to post to. If you specify a group ID, this will post a message to the group chat by default,
+      but you can also specify a `thread_subject` in order ot create a thread. If You may include a comma separated list of targets if you wish to post to multiple targets at once.
       Set the "GLUE_DEFAULT_TARGET" environment variable for the default target.
     type: string
     default: $GLUE_DEFAULT_TARGET
