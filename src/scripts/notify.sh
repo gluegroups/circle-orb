@@ -14,8 +14,8 @@ BuildMessageBody() {
         CUSTOM_BODY=$(jq -n --arg text "$GLUE_PARAM_CUSTOM" '{text: $text}')
         SanitizeVars "$CUSTOM_BODY"
         # shellcheck disable=SC2016
-        CUSTOM_BODY_MODIFIED=$(echo "$CUSTOM_BODY_MODIFIED" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed 's/`/\\`/g')
-        T2="$(eval printf '%s' \""$CUSTOM_BODY_MODIFIED"\")"
+        CUSTOM_BODY=$(echo "$CUSTOM_BODY" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed 's/`/\\`/g')
+        T2="$(eval printf '%s' \""$CUSTOM_BODY"\")"
     else
         # shellcheck disable=SC2154
         if [ -n "${GLUE_PARAM_TEMPLATE:-}" ]; then TEMPLATE="\$$GLUE_PARAM_TEMPLATE"
