@@ -28,7 +28,7 @@ jobs:
           event: always
           custom: |
             **Current Job: $CIRCLE_JOB**
-            This test will @ a normal user, a user ID, and normal group name: <@U8C9ETTUG>, @orbs, @gabriel
+            This test will mention a user and group: [Jason Yonker](glue:usr_23OGanSTTqOz1qQhOAnAVhKF8qz), [CircleCI Orb](glue:grp_2l554gu1RmXb9PpQDbYOk47LJgx)
       - run:
           name: Verify GLUE_JOB_STATUS is written
           command: |
