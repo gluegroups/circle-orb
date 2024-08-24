@@ -40,10 +40,12 @@ BuildMessageBody() {
 
     # Substitute and insert thread_subject and thread_by if they exist
     if [ -n "${GLUE_PARAM_THREAD_SUBJECT:-}" ]; then
+        SanitizeVars "$GLUE_PARAM_THREAD_SUBJECT"
         thread_subject="$(eval echo "$GLUE_PARAM_THREAD_SUBJECT")"
         T2="$(printf '%s' "$T2" | jq ". + {\"threadSubject\": \"$thread_subject\"}")"
         
         if [ -n "${GLUE_PARAM_THREAD_BY:-}" ]; then
+            SanitizeVars "$GLUE_PARAM_THREAD_BY"
             thread_by="$(eval echo "$GLUE_PARAM_THREAD_BY")"
             T2="$(printf '%s' "$T2" | jq ". + {\"threadBy\": \"$thread_by\"}")"
         fi

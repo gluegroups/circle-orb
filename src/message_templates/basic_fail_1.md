@@ -1,4 +1,4 @@
-## CircleCI Job Failed 🔴  
+**CircleCI Job Failed 🔴**  
 **Job:** ${CIRCLE_JOB}
 **Project:** $CIRCLE_PROJECT_REPONAME
 **Branch:** $CIRCLE_BRANCH
