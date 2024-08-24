@@ -20,7 +20,7 @@ usage:
             branch_pattern: production # A second alert to ping certain folks to failures on this branch.
             event: fail
             template: basic_fail_1
-            mentions: "<@U8XXXXXXX>, @UserName"
+            mentions: "[User Name](glue:usr_ABCXYZ)"
   workflows:
     deploy_and_notify:
       jobs:

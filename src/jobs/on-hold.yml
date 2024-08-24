@@ -18,8 +18,9 @@ parameters:
   mentions:
     description: |
       Exports to the "$GLUE_PARAM_MENTIONS" environment variable for use in templates.
-      Mention users via the @ symbol: "@USER"
-      If the username contains a space, the Glue ID must be used with angled brackets: "<@U8XXXXXXX>"
+      Mention users by creating a link to their user ID. Mention groups by creating a link to the group ID. For example:
+      [User Name](glue:usr_ABCXYZ)
+      [Group Name](glue:grp_123456)
     type: string
     default: ""
   template:

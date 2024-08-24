@@ -25,7 +25,7 @@ usage:
         - glue/notify:
             event: fail
             template: basic_fail_1
-            mentions: "@EngineeringTeam"
+            mentions: "[Engineering](glue:grp_123456)"
         # When there is a successful deployment, send a notification with a different template.
         - glue/notify:
             event: pass

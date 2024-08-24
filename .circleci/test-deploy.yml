@@ -37,7 +37,7 @@ jobs:
           debug: true
           step_name: "Fail template with mentions"
           template: basic_fail_1
-          mentions: "@orbs"
+          mentions: "[CircleCI Orb](glue:grp_2l554gu1RmXb9PpQDbYOk47LJgx)"
           event: always
       - glue/notify:
           debug: true
