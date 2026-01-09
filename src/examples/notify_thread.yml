@@ -2,6 +2,8 @@ description: |
   Create a Glue thread in the `target` group and send subsequent `notify` messages to the same thread.
   `thread_subject` parameter determines the subject of the thread.
   `thread_by` parameter holds a thread identifier in case there are multiple notifications in the pipeline.
+
+  Note: target must be a group(s) if a thread is specified.
 usage:
   version: 2.1
   orbs:
