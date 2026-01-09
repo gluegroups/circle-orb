@@ -58,13 +58,9 @@ BuildMessageBody() {
   GLUE_MSG_BODY="$T2"
 }
 
-PostToGlue() {
-  # Post once per target listed by the target parameter
-  #    The target must be modified in GLUE_MSG_BODY
-  # shellcheck disable=SC2001
-  for i in $(eval echo \""$GLUE_PARAM_TARGET"\" | sed "s/,/ /g"); do
-    echo "Sending to Glue Target: $i"
-    GLUE_MSG_BODY=$(echo "$GLUE_MSG_BODY" | jq --arg target "$i" '.target = $target')
+SendToTarget() {
+    echo "Sending to Glue Target: $1"
+    GLUE_MSG_BODY=$(echo "$GLUE_MSG_BODY" | jq --arg target "$1" '.target = $target')
     if [ "$GLUE_PARAM_DEBUG" -eq 1 ]; then
       printf "%s\n" "$GLUE_MSG_BODY" >"$GLUE_MSG_BODY_LOG"
       echo "The message body being sent to Glue can be found below. To view redacted values, rerun the job with SSH and access: ${GLUE_MSG_BODY_LOG}"
@@ -89,7 +85,20 @@ PostToGlue() {
         exit 1
       fi
     fi
-  done
+}
+
+PostToGlue() {
+  if [ -n "${GLUE_PARAM_THREAD_SUBJECT:-}" ] || [ -n "${GLUE_PARAM_THREAD_BY:-}" ]; then
+    # Posting to a thread, don't loop through targets
+    SendToTarget "$(eval echo "${GLUE_PARAM_TARGET}")"
+  else 
+    # Post once per target listed by the target parameter
+    #    The target must be modified in GLUE_MSG_BODY
+    # shellcheck disable=SC2001
+    for i in $(eval echo \""$GLUE_PARAM_TARGET"\" | sed "s/,/ /g"); do
+      SendToTarget "$i"
+    done
+  fi
 }
 
 InstallJq() {
