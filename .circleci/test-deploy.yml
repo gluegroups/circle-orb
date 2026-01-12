@@ -142,6 +142,22 @@ jobs:
           thread_subject: CI workflow for $CIRCLE_SHA1
           custom: |
             **Message 2.**
+      - glue/notify:
+          debug: true
+          step_name: "Notify in a new thread with multiple targets"
+          event: always
+          thread_by: testing-multiple-$CIRCLE_SHA1
+          thread_subject: CI multiple targets workflow for $CIRCLE_SHA1
+          target: $GLUE_DEFAULT_TARGET,$GLUE_SECOND_TARGET
+          custom: |
+            **Message 3.** $CIRCLE_JOB
+      - glue/notify:
+          debug: true
+          step_name: "Notify multiple targets only"
+          event: always
+          target: $GLUE_DEFAULT_TARGET,$GLUE_SECOND_TARGET
+          custom: |
+            **Message 4.** $CIRCLE_JOB
 
 workflows:
   test-deploy:
@@ -169,7 +185,7 @@ executors:
       - image: cimg/base:current
   mac:
     macos:
-      xcode: 14.0.0
+      xcode: 14.3.1
   alpine:
     # This image contains both CURL and JQ
     docker:
