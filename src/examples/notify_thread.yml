@@ -3,7 +3,7 @@ description: |
   `thread_subject` parameter determines the subject of the thread.
   `thread_by` parameter holds a thread identifier in case there are multiple notifications in the pipeline.
 
-  Note: target must be a group(s) if a thread is specified.
+  Note: target must be a group(s) if a `thread_subject` is specified.
 usage:
   version: 2.1
   orbs:
